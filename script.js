@@ -3,18 +3,19 @@ buttons.forEach(button => button.addEventListener('click', getInput));
 let input ='';
 
 function createEquation() {
-    const equation = {};
-    equation.input1;
-    equation.input2;
-    equation.output;
-    equation.operatorSelected;
+    const mathEquation = {};
+    mathEquation.input1;
+    mathEquation.input2;
+    mathEquation.output;
+    mathEquation.operatorSelected;
 
-    return equation;
+    return mathEquation;
 };
 
 
-let newEquation = createEquation();
-console.log(newEquation)
+let equation = createEquation();
+
+console.log(equation)
 const box = document.querySelector('.display p');
 
 function updateDisplay(string){
@@ -25,7 +26,7 @@ function clearCalculator(){
     newEquation = null;
     return;
 }
-
+function deleteValues(){
 // function deleteValues(){ //str = str.substr(0,str.length-1);
 //     let storedValue;
 //     if(input2 != '' ){
@@ -59,7 +60,7 @@ function clearCalculator(){
 //         }
 //     }
 // }
-
+}
 function storeNumber(input){
     input.includes('.') ? parseFloat(input) : parseInt(input);
 }
