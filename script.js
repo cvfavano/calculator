@@ -23,7 +23,9 @@ function updateDisplay(string){
 }
 function clearCalculator(){
     updateDisplay('0');
-    newEquation = null;
+    //CHECK THIS
+    equation = createEquation();
+    input = '';
     return;
 }
 function deleteValues(){
@@ -62,10 +64,10 @@ function deleteValues(){
 // }
 }
 function storeNumber(input){
-    input.includes('.') ? parseFloat(input) : parseInt(input);
+    input.includes('.') ? parseFloat(input): parseInt(input);
+    
 }
 
-function getString(){}
 
 function getInput(){
     const key = this.getAttribute('data-key');
@@ -80,68 +82,75 @@ function getInput(){
             break;
     
         case '=' :
-            input2.replace(/=/gi,'');
-    
-            input2 = storeNumber(input2);
-            // console.log(input2)
-            // console.log(typeof input2)
-            operate(input1, input2, operatorSelected)
-            updateDisplay(output);
+            operate(equation.input1, equation.input2, equation.operatorSelected)
+            updateDisplay(equation.output);
             break;
-    
-        case '+' ||  '-' ||  '/' || '*':    
-            operatorSelected = key;
-       
-            updateDisplay(key);
         
-            x.input1 = storeNumber(input1);
-            console.log(newEquation.input1)
+        case '*':
+        case '/':
+        case '-':
+        case '+':    
+            equation.operatorSelected = key;
+            updateDisplay(key);
+            input = '';
         //TO DO
         case 'plus/minus':
             console.log('toggle neg/pos or multiply by -1(?)');
             break;
 
         default:
- 
-        updateDisplay(key);
+        
         //store operator
-        getString(key);
+        input += key;
+        
+        if(equation.operatorSelected == undefined) {
+            equation.input1 = storeNumber(input);
+        }
+        else {
+            equation.input2 = storeNumber(input);
+        }
+
+
+
+        updateDisplay(input);
+       
+
         }
 
     
     //then it is first input
-    if(newEquation.operatorSelected == undefined){   
-        console.log(typeof input1)
-        if(input1==''){
-            input1 = key;
-        }
-        else{
-            input1 += key;
-            updateDisplay(input1)
-        }
-    }
+    // if(newEquation.operatorSelected == undefined){   
+    //     console.log(typeof input1)
+    //     if(input1==''){
+    //         input1 = key;
+    //     }
+    //     else{
+    //         input1 += key;
+    //         updateDisplay(input1)
+    //     }
+    // }
     
-    if(operatorSelected != undefined){
-        if(key == '0' && operatorSelected == '/'){
-            updateDisplay('Error');
+    // if(operatorSelected != undefined){
+    //     if(key == '0' && operatorSelected == '/'){
+    //         updateDisplay('Error');
             
-            return;
-        }
+    //         return;
+    //     }
 
-        else if (input2 == ''){
-            x.input2 = key;
-            x.input2.replace(/[\+\-\*\/]/gi,'');
-            updateDisplay(input2);
-        }
-        else{
-            x.input2 += ""+key;
-            updateDisplay(x.input2);
-        }
-    }
+    //     else if (input2 == ''){
+    //         x.input2 = key;
+    //         x.input2.replace(/[\+\-\*\/]/gi,'');
+    //         updateDisplay(input2);
+    //     }
+    //     else{
+    //         x.input2 += ""+key;
+    //         updateDisplay(x.input2);
+    //     }
+    // }
     
-
-   
-    console.table(newEquation )
+ console.log('input: ' + input);
+   console.log(typeof input)
+    console.table(equation )
 }
 
 
@@ -153,19 +162,19 @@ function operate(num1,num2,operator){
    // console.log(typeof num1, typeof num2, typeof operator)
     switch(operator){
         case '+':
-            output = add(num1,num2);
+            equation.output = add(num1,num2);
             break;
 
         case "-":
-            output =subtract(num1,num2);
+            equation.output = subtract(num1,num2);
             break;
 
         case '*':
-            output =multiply(num1,num2);
+            equation.output = multiply(num1,num2);
             break;
 
         case '/':
-            output =divide(num1,num2);
+            equation.output =divide(num1,num2);
             break;
     }
 }
