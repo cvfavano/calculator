@@ -3,12 +3,14 @@ buttons.forEach(button => button.addEventListener('click', getInput));
 let input ='';
 
 function createEquation() {
-    const mathEquation = {};
-    mathEquation.input1;
-    mathEquation.input2;
-    mathEquation.output;
-    mathEquation.operatorSelected;
-
+    const mathEquation = {
+        input1: undefined,
+        input2: undefined,
+        output: undefined,
+        operatorSelected: undefined,
+        outputStored: false
+    };
+   
     return mathEquation;
 };
 
@@ -23,7 +25,6 @@ function updateDisplay(string){
 }
 function clearCalculator(){
     updateDisplay('0');
-    //CHECK THIS
     equation = createEquation();
     input = '';
     return;
@@ -64,10 +65,27 @@ function deleteValues(){
 // }
 }
 function storeNumber(input){
-    input.includes('.') ? parseFloat(input): parseInt(input);
-    
+    return input.includes('.') ? parseFloat(input): parseInt(input);
 }
 
+//has total and uses total in next operations
+function hasOutput(operator){
+    if(equation.output != undefined) {
+        equation.operatorSelected = operator;
+        equation.input1 = equation.output;
+        equation.input2 = undefined;
+        equation.outputStored = true;
+    }
+}
+function hasManyOperators(nextOperator){
+    //has chained operations without total 9+9+9
+    if (equation.operatorSelected != undefined) {
+        operate(equation.input1, equation.input2, equation.operatorSelected);
+        updateDisplay(equation.output);
+        equation.input1 = equation.output;
+        equation.input2 = undefined;
+    }
+}
 
 function getInput(){
     const key = this.getAttribute('data-key');
@@ -90,6 +108,13 @@ function getInput(){
         case '/':
         case '-':
         case '+':    
+            
+            hasOutput(key);
+
+            if(outputStored) {
+                hasManyOperators(key);
+            }
+
             equation.operatorSelected = key;
             updateDisplay(key);
             input = '';
@@ -98,58 +123,16 @@ function getInput(){
             console.log('toggle neg/pos or multiply by -1(?)');
             break;
 
-        default:
+        default:   
+            input += key;
         
-        //store operator
-        input += key;
+            equation.operatorSelected == undefined ? equation.input1 = storeNumber(input):   equation.input2 = storeNumber(input);
         
-        if(equation.operatorSelected == undefined) {
-            equation.input1 = storeNumber(input);
+            updateDisplay(input);
         }
-        else {
-            equation.input2 = storeNumber(input);
-        }
-
-
-
-        updateDisplay(input);
-       
-
-        }
-
     
-    //then it is first input
-    // if(newEquation.operatorSelected == undefined){   
-    //     console.log(typeof input1)
-    //     if(input1==''){
-    //         input1 = key;
-    //     }
-    //     else{
-    //         input1 += key;
-    //         updateDisplay(input1)
-    //     }
-    // }
-    
-    // if(operatorSelected != undefined){
-    //     if(key == '0' && operatorSelected == '/'){
-    //         updateDisplay('Error');
-            
-    //         return;
-    //     }
-
-    //     else if (input2 == ''){
-    //         x.input2 = key;
-    //         x.input2.replace(/[\+\-\*\/]/gi,'');
-    //         updateDisplay(input2);
-    //     }
-    //     else{
-    //         x.input2 += ""+key;
-    //         updateDisplay(x.input2);
-    //     }
-    // }
-    
- console.log('input: ' + input);
-   console.log(typeof input)
+    console.log('input: ' + input);
+    console.log(typeof input)
     console.table(equation )
 }
 
