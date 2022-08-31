@@ -29,6 +29,15 @@ function clearCalculator(){
     input = '';
     return;
 }
+
+function divisbleByZeroError(){
+    if (equation.input2 == 0)
+    {
+        return true;
+    }
+    return false;
+}
+
 function deleteValues(){
 // function deleteValues(){ //str = str.substr(0,str.length-1);
 //     let storedValue;
@@ -65,7 +74,15 @@ function deleteValues(){
 // }
 }
 function storeNumber(input){
-    return input.includes('.') ? parseFloat(input): parseInt(input);
+    if(typeof input != 'string') {
+        input = input.toString();
+    }
+if (input.includes('.')){
+ return parseFloat(input) 
+}
+ else{
+    return parseInt(input);
+ }
 }
 
 //has total and uses total in next operations
@@ -100,6 +117,11 @@ function getInput(){
             break;
     
         case '=' :
+            if(equation.output == undefined){ 
+
+                updateDisplay('Error');
+                break;
+            }
             operate(equation.input1, equation.input2, equation.operatorSelected)
             updateDisplay(equation.output);
             break;
@@ -111,16 +133,19 @@ function getInput(){
             
             hasOutput(key);
 
-            if(outputStored) {
+            if(equation.outputStored) {
                 hasManyOperators(key);
             }
 
             equation.operatorSelected = key;
             updateDisplay(key);
             input = '';
-        //TO DO
-        case 'plus/minus':
-            console.log('toggle neg/pos or multiply by -1(?)');
+            break;
+
+        case 'plus-minus':
+            Math.sign(input) == 1 ? input = -Math.abs(input) : input = Math.abs(input);s
+            updateDisplay(input);
+            equation.operatorSelected == undefined ? equation.input1 = storeNumber(input):   equation.input2 = storeNumber(input);
             break;
 
         default:   
@@ -131,8 +156,6 @@ function getInput(){
             updateDisplay(input);
         }
     
-    console.log('input: ' + input);
-    console.log(typeof input)
     console.table(equation )
 }
 
@@ -169,6 +192,11 @@ function subtract(num1,num2){
     return num1 - num2;
 }
 function divide(num1,num2){
+    const isError = divisbleByZeroError();
+    if(isError){
+        equation.output='undefined';
+        return;
+    };
     return num1 / num2;
 }
 function multiply(num1,num2){
