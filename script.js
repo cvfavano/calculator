@@ -11,15 +11,12 @@ function createEquation() {
         operatorSelected: undefined,
         outputStored: false
     };
+
     let decimalButton = document.querySelector('button#decimal');
-    console.log(decimalButton)
     decimal.disabled = false;
     
-  //  if(box.decimalButton.classList == )
-   // box.decimalButton.classList.remove('disable');
     return mathEquation;
 };
-
 
 let equation = createEquation();
 
