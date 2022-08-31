@@ -2,6 +2,7 @@ const buttons = document.querySelectorAll('button');
 buttons.forEach(button => button.addEventListener('click', getInput));
 let input ='';
 
+const box = document.querySelector('.display p');
 function createEquation() {
     const mathEquation = {
         input1: undefined,
@@ -10,7 +11,12 @@ function createEquation() {
         operatorSelected: undefined,
         outputStored: false
     };
-   
+    let decimalButton = document.querySelector('button#decimal');
+    console.log(decimalButton)
+    decimal.disabled = false;
+    
+  //  if(box.decimalButton.classList == )
+   // box.decimalButton.classList.remove('disable');
     return mathEquation;
 };
 
@@ -18,7 +24,6 @@ function createEquation() {
 let equation = createEquation();
 
 console.log(equation)
-const box = document.querySelector('.display p');
 
 function updateDisplay(string){
     box.firstChild.data = string;
@@ -38,8 +43,10 @@ function divisbleByZeroError(){
     return false;
 }
 
-function deleteValues(){
-// function deleteValues(){ //str = str.substr(0,str.length-1);
+function deleteValues(value){
+    
+ let str = value.toString().substr(0,str.length-1);
+ console.log(str);
 //     let storedValue;
 //     if(input2 != '' ){
 
@@ -71,21 +78,23 @@ function deleteValues(){
 //             updateDisplay('0');
 //         }
 //     }
-// }
+
 }
 function storeNumber(input){
     if(typeof input != 'string') {
         input = input.toString();
     }
-if (input.includes('.')){
- return parseFloat(input) 
-}
- else{
-    return parseInt(input);
- }
+    if(input.includes('.')) {
+        let decimalButton = document.querySelector('button#decimal');
+        decimalButton.disabled = true;
+        return        parseFloat(input) 
+    }
+
+    else{return parseInt(input)}
+    
 }
 
-//has total and uses total in next operations
+//has total and uses total in next operation
 function hasOutput(operator){
     if(equation.output != undefined) {
         equation.operatorSelected = operator;
@@ -97,9 +106,10 @@ function hasOutput(operator){
 function hasManyOperators(nextOperator){
     //has chained operations without total 9+9+9
     if (equation.operatorSelected != undefined) {
-        operate(equation.input1, equation.input2, equation.operatorSelected);
+        operate(equation.input1, equation.input2, equation.nextOperator);
         updateDisplay(equation.output);
         equation.input1 = equation.output;
+        equation.operatorSelected = equation.nextOperator
         equation.input2 = undefined;
     }
 }
@@ -113,15 +123,11 @@ function getInput(){
             break;
         
         case 'delete':
-            deleteValues();
+            deleteValues(input);
             break;
     
         case '=' :
-            if(equation.output == undefined){ 
-
-                updateDisplay('Error');
-                break;
-            }
+            
             operate(equation.input1, equation.input2, equation.operatorSelected)
             updateDisplay(equation.output);
             break;
@@ -131,11 +137,15 @@ function getInput(){
         case '-':
         case '+':    
             
+
             hasOutput(key);
 
-            if(equation.outputStored) {
-                hasManyOperators(key);
-            }
+           
+            //     hasManyOperators(key);
+            //     updateDisplay(equation.output)
+            //     input='';
+            //     break;
+            // }
 
             equation.operatorSelected = key;
             updateDisplay(key);
@@ -143,7 +153,7 @@ function getInput(){
             break;
 
         case 'plus-minus':
-            Math.sign(input) == 1 ? input = -Math.abs(input) : input = Math.abs(input);s
+            Math.sign(input) == 1 ? input = -Math.abs(input) : input = Math.abs(input);
             updateDisplay(input);
             equation.operatorSelected == undefined ? equation.input1 = storeNumber(input):   equation.input2 = storeNumber(input);
             break;
