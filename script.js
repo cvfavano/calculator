@@ -13,7 +13,8 @@ function createEquation() {
         hasDecimal: false,
         input1Active: false,
         input2Active: false,
-        operatorSelectedActive: false
+        operatorSelectedActive: false,
+        outputActive: false
     };
     decimalButton.disabled = false;
 
@@ -41,8 +42,12 @@ function divisbleByZeroError(){
 
 function deleteValues(value){
     
- let str = value.toString().substr(0,str.length-1);
- console.log(str);
+    console.log('value: '   + value);
+    const str = value.toString();
+    const newNumber = str.substring(0,str.length-1);
+//store number, find how to find current number
+    updateDisplay(newNumber);
+ console.log(newNumber);
 
 }
 function storeNumber(input){
@@ -132,9 +137,9 @@ function getInput(){
             equation.operatorSelected = key;
             equation.output = undefined;
             
-                input='';
+            input='';
                 
-                break;
+            break;
         }
 
             equation.operatorSelected = key;
@@ -263,10 +268,10 @@ function multiply(num1,num2){
 }
 
 
-// // test cases weird math
-console.log(1.1 +1.3)
-console.log(3.025/2.2)
-console.log(3.5*2.21)// ==> multiplacation many decimals still
-console.log(1.1 +1.3 + .2)
-console.log((1.1 +1.3) + .2)
-console.log(32.09*100)
+// // // test cases weird math
+// console.log(1.1 +1.3)
+// console.log(3.025/2.2)
+// console.log(3.5*2.21)// ==> multiplacation many decimals still
+// console.log(1.1 +1.3 + .2)
+// console.log((1.1 +1.3) + .2)
+// console.log(32.09*100)
