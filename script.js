@@ -216,7 +216,7 @@ function getMultiplier(input1,input2){
     if (hasDecimal1 != 'undefined' && hasDecimal2 != 'undefined'){
         hasDecimal1 = String(input1).split('.')[1].length;
         hasDecimal2 = String(input2).split('.')[1].length;
-        if (input1 > input2 ) {
+        if (hasDecimal1 > hasDecimal2 ) {
             decimals = hasDecimal1;
         }
         else {
@@ -270,9 +270,9 @@ function multiply(num1,num2){
 }
 
 
-// test cases weird math
+// // test cases weird math
 // console.log(1.1 +1.3)
 // console.log(3.025/2.2)
-// console.log(3.5*2.21) ==> multiplacation many decimals still
-//console.log(1.1 +1.3 + .2)
+// console.log(3.5*2.21)// ==> multiplacation many decimals still
+// console.log(1.1 +1.3 + .2)
 // console.log((1.1 +1.3) + .2)
