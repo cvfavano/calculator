@@ -191,7 +191,7 @@ function getDecimalLength (input1) {
     let x = String(input1).split('.');
     console.log(x)
      if(String(input1).split('.')[1] != undefined) {
-        String(input1).split('.')[1].length 
+        return String(input1).split('.')[1].length;
      }
     else return 'undefined';
 }
@@ -227,24 +227,24 @@ function getMultiplier(input1,input2){
    
     let multiplier = '1';
       for(i=0; i < decimals; i++) {
-        multiplier += '0';
+        multiplier+= '0';
     }
     
-    return multiplier;
+    return [multiplier,decimals];
 }
 
 
 function add(num1,num2){
     if(equation.hasDecimal){
         let multiplier = getMultiplier(num1, num2);
-        return ((num1 * multiplier) + (num2 * multiplier))/multiplier;
+        return ((num1 * multiplier[0]) + (num2 * multiplier[0]))/multiplier[0];
     }
     else return num1 + num2;
 }
 function subtract(num1,num2){
     if(equation.hasDecimal){
         let multiplier = getMultiplier(num1, num2);
-        return ((num1 * multiplier) - (num2 * multiplier))/multiplier;
+        return ((num1 * multiplier[0]) - (num2 * multiplier[0]))/multiplier[0];
     }
     return num1 - num2;
 }
@@ -257,22 +257,25 @@ function divide(num1,num2){
 
     if(equation.hasDecimal){
         let multiplier = getMultiplier(num1, num2);
-        return ((num1 * multiplier) / (num2 * multiplier));
+        let quotient = (num1 * multiplier[0]) / (num2 * multiplier[0])
+        return parseFloat(quotient.toFixed(multiplier[1]+1));
     }
     return num1 / num2;
 }
 function multiply(num1,num2){
     if(equation.hasDecimal){
         let multiplier = getMultiplier(num1, num2);
-        return ((num1 ) * (num2 * multiplier))/(multiplier);
+        let product = ((num1 ) * (num2 * multiplier[0]))/(multiplier[0]);
+        return parseFloat(product.toFixed(multiplier[1]+1));
     }
     return num1 * num2;
 }
 
 
 // // test cases weird math
-// console.log(1.1 +1.3)
-// console.log(3.025/2.2)
-// console.log(3.5*2.21)// ==> multiplacation many decimals still
-// console.log(1.1 +1.3 + .2)
-// console.log((1.1 +1.3) + .2)
+console.log(1.1 +1.3)
+console.log(3.025/2.2)
+console.log(3.5*2.21)// ==> multiplacation many decimals still
+console.log(1.1 +1.3 + .2)
+console.log((1.1 +1.3) + .2)
+console.log(32.09*100)
