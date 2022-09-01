@@ -82,7 +82,8 @@ function hasManyOperators(nextOperator){
 }
 
 function disableDecimal(){
-    if(input.includes('.')){
+    
+    if(String(input).includes('.')){
         decimalButton.disabled = true;
     } 
     else { 
@@ -269,4 +270,6 @@ function multiply(num1,num2){
 // test cases weird math
 // console.log(1.1 +1.3)
 // console.log(3.025/2.2)
-// console.log(3.5*2.21)
+// console.log(3.5*2.21) ==> multiplacation many decimals still
+//console.log(1.1 +1.3 + .2)
+// console.log((1.1 +1.3) + .2)
