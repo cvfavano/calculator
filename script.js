@@ -10,7 +10,10 @@ function createEquation() {
         input2: undefined,
         output: undefined,
         operatorSelected: undefined,
-        hasDecimal: false
+        hasDecimal: false,
+        input1Active: false,
+        input2Active: false,
+        operatorSelectedActive: false
     };
     decimalButton.disabled = false;
 
