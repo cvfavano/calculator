@@ -160,13 +160,7 @@ function getInput(){
     console.table(equation )
 }
 
-
-
-//Create a new function operate that takes an operator and 2 
-//numbers and then calls one of the above functions on the numbers.
 function operate(num1,num2,operator){
- //   console.log(num1,num2,operator);
-   // console.log(typeof num1, typeof num2, typeof operator)
     switch(operator){
         case '+':
             equation.output = add(num1,num2);
@@ -196,14 +190,11 @@ function getDecimalLength (input1) {
     else return 'undefined';
 }
 
-// if only one has decimal
 function getMultiplier(input1,input2){
-    
-    
     const numberstring1 = String(input1);
     const numberstring2 = String(input2);
-    let hasDecimal1 = getDecimalLength(input1);
-    let hasDecimal2 = getDecimalLength(input2);
+    const hasDecimal1 = getDecimalLength(input1);
+    const hasDecimal2 = getDecimalLength(input2);
 
     let decimals;
 
@@ -226,7 +217,7 @@ function getMultiplier(input1,input2){
     }    
    
     let multiplier = '1';
-      for(i=0; i < decimals; i++) {
+    for(i=0; i < decimals; i++) {
         multiplier+= '0';
     }
     
