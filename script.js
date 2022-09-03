@@ -26,6 +26,10 @@ let equation = createEquation();
 
 console.log(equation)
 
+function getActiveDisplay(string){
+
+}
+
 function updateDisplay(string){
     box.firstChild.data = string;
 }
@@ -79,13 +83,13 @@ function hasOutput(operator){
 function hasManyOperators(nextOperator){
     //has chained operations without total 9+9+9
     if (equation.operatorSelected != undefined) {
-        operate(equation.input1, equation.input2, equation.operatorSelected);
-        updateDisplay(equation.output);
-        equation.input1 = equation.output;
-        equation.operatorSelected = nextOperator;
-        equation.input2 = undefined;
-        equation.output = undefined;
-        input = '';
+        operate(equation.input1, equation.input2, equation.operatorSelected)
+            updateDisplay(equation.output);
+            equation.input1 =  equation.output;
+            equation.operatorSelected = nextOperator;
+            equation.output = undefined;
+            
+            input = '';
     }
 }
 
@@ -136,15 +140,7 @@ function getInput(){
         }
         //has many operators
         if(equation.input1 && equation.input2 && equation.output == undefined) {
-
-            operate(equation.input1, equation.input2, equation.operatorSelected)
-            updateDisplay(equation.output);
-            equation.input1 =  equation.output;
-            equation.operatorSelected = key;
-            equation.output = undefined;
-            
-            input = '';
-                
+            hasManyOperators(key);
             break;
         }
 
@@ -211,6 +207,7 @@ function getMultiplier(input1,input2){
     if( hasDecimal1 == undefined && hasDecimal2 == undefined) {
         equation.hasDecimal = false;
 
+        //[multpiler,decimals]
         return [1,0];
     }
     if( hasDecimal1 == undefined) {
@@ -257,8 +254,8 @@ function subtract(num1,num2){
 function divide(num1,num2){
     const isError = divisbleByZeroError();
     if(isError){
-        equation.output='undefined';
-        return;
+        equation.output = 'undefined';
+        return; 
     };
 
     if(equation.hasDecimal){
@@ -281,7 +278,7 @@ function multiply(num1,num2){
 // // // test cases weird math
 // console.log(1.1 +1.3)
 // console.log(3.025/2.2)
-// console.log(3.5*2.21)// ==> multiplacation many decimals still
+// console.log(3.5*2.21)
 // console.log(1.1 +1.3 + .2)
 // console.log((1.1 +1.3) + .2)
 // console.log(32.09*100)
