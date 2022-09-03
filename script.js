@@ -56,11 +56,11 @@ function storeNumber(input){
     }
     if(input.includes('.')){
         equation.hasDecimal = true;
-        return parseFloat(input)
+        return parseFloat(input);
     }
 
     else{
-        return parseInt(input)
+        return parseInt(input);
     }
     
 }
