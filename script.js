@@ -191,11 +191,11 @@ function operate(num1,num2,operator){
     }
 }
 
-function getDecimalLength(input1) {
-    let x = String(input1).split('.');
+function getDecimalLength(input) {
+    let x = String(input).split('.');
   
-   if(String(input1).length == 2 ) {
-       return String(input1).split('.')[1].length
+   if(x.length > 1 ) {
+       return x[1].length
     }
     else  undefined;
 }
