@@ -4,6 +4,7 @@ let input ='';
 
 const box = document.querySelector('.display p');
 let decimalButton = document.querySelector('button#decimal');
+
 function createEquation() {
     const mathEquation = {
         input1: undefined,
@@ -17,7 +18,6 @@ function createEquation() {
         outputActive: false
     };
     decimalButton.disabled = false;
-
 
     return mathEquation;
 };
@@ -45,9 +45,9 @@ function deleteValues(value){
     console.log('value: '   + value);
     const str = value.toString();
     const newNumber = str.substring(0,str.length-1);
-//store number, find how to find current number
+    //store number, find how to find current number
     updateDisplay(newNumber);
- console.log(newNumber);
+    console.log(newNumber);
 
 }
 function storeNumber(input){
@@ -90,13 +90,19 @@ function hasManyOperators(nextOperator){
 }
 
 function disableDecimal(){
-    
-    if(String(input).includes('.')){
+
+    if(input == '') {
+        decimalButton.disabled = false;
+    }
+
+     if(String(input).includes('.')){
         decimalButton.disabled = true;
     } 
     else { 
         decimalButton.disabled = false;
     }
+
+   
 }
 
 function getInput(){
@@ -118,7 +124,7 @@ function getInput(){
             operate(equation.input1, equation.input2, equation.operatorSelected)
             updateDisplay(equation.output);
             break;
-        
+
         case '*':
         case '/':
         case '-':
@@ -137,7 +143,7 @@ function getInput(){
             equation.operatorSelected = key;
             equation.output = undefined;
             
-            input='';
+            input = '';
                 
             break;
         }
@@ -156,7 +162,7 @@ function getInput(){
 
         default:   
             input += key;
-        
+            
             equation.operatorSelected == undefined ? equation.input1 = storeNumber(input):   equation.input2 = storeNumber(input);
         
             updateDisplay(input);
@@ -185,14 +191,13 @@ function operate(num1,num2,operator){
     }
 }
 
-function getDecimalLength (input1) {
-
+function getDecimalLength(input1) {
     let x = String(input1).split('.');
-    console.log(x)
-     if(String(input1).split('.')[1] != undefined) {
-        return String(input1).split('.')[1].length;
-     }
-    else return 'undefined';
+  
+   if(String(input1).length == 2 ) {
+       return String(input1).split('.')[1].length
+    }
+    else  undefined;
 }
 
 function getMultiplier(input1,input2){
@@ -203,13 +208,18 @@ function getMultiplier(input1,input2){
 
     let decimals;
 
-    if( hasDecimal1 == 'undefined') {
+    if( hasDecimal1 == undefined && hasDecimal2 == undefined) {
+        equation.hasDecimal = false;
+
+        return [1,0];
+    }
+    if( hasDecimal1 == undefined) {
         decimals = String(input2).split('.')[1].length
     }
-    if( hasDecimal2 == 'undefined') {
+    if( hasDecimal2 == undefined) {
         decimals = String(input1).split('.')[1].length
     }
-    if (hasDecimal1 != 'undefined' && hasDecimal2 != 'undefined'){
+    if (hasDecimal1 != undefined && hasDecimal2 != undefined){
         hasDecimal1 = String(input1).split('.')[1].length;
         hasDecimal2 = String(input2).split('.')[1].length;
         if (hasDecimal1 > hasDecimal2 ) {
@@ -231,7 +241,7 @@ function getMultiplier(input1,input2){
 
 
 function add(num1,num2){
-    if(equation.hasDecimal){
+    if(equation.hasDecimal ){
         let multiplier = getMultiplier(num1, num2);
         return ((num1 * multiplier[0]) + (num2 * multiplier[0]))/multiplier[0];
     }
