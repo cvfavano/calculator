@@ -2,7 +2,7 @@ const buttons = document.querySelectorAll('button');
 buttons.forEach(button => button.addEventListener('click', getInput));
 let input ='';
 
-const box = document.querySelector('.display p');
+const box = document.querySelector('.display > p');
 let decimalButton = document.querySelector('button#decimal');
 
 function createEquation() {
@@ -12,11 +12,12 @@ function createEquation() {
         output: undefined,
         operatorSelected: undefined,
         hasDecimal: false,
-        input1Active: false,
+        input1Active : true,
         input2Active: false,
         operatorSelectedActive: false,
         outputActive: false
     };
+
     decimalButton.disabled = false;
 
     return mathEquation;
@@ -26,7 +27,7 @@ let equation = createEquation();
 
 console.log(equation)
 
-function getActiveDisplay(string){
+function getActiveInput(string){
 
 }
 
@@ -44,16 +45,17 @@ function divisbleByZeroError(){
     return equation.input2 == 0 ?  true : false;
 }
 
-function deleteValues(value){
-    
+function deleteValues(value){  
     console.log('value: '   + value);
     const str = value.toString();
     const newNumber = str.substring(0,str.length-1);
+
+    getActiveInput();
     //store number, find how to find current number
     updateDisplay(newNumber);
     console.log(newNumber);
-
 }
+
 function storeNumber(input){
     if(typeof input != 'string') {
         input = input.toString();
@@ -62,11 +64,9 @@ function storeNumber(input){
         equation.hasDecimal = true;
         return parseFloat(input);
     }
-
     else{
         return parseInt(input);
-    }
-    
+    }   
 }
 
 //has total and uses total in next operation
@@ -77,17 +77,30 @@ function hasOutput(operator){
         equation.input1 = equation.output;
         equation.input2 = undefined;
         equation.output = undefined;
+        
+        equation.outputActive = false;
+        equation.input1Active = true;
+        equation.input2Active = false;
+        equation.operatorSelectedActive = false;
+        
         input = '';
     }
 }
 function hasManyOperators(nextOperator){
     //has chained operations without total 9+9+9
     if (equation.operatorSelected != undefined) {
-        operate(equation.input1, equation.input2, equation.operatorSelected)
+        
+            operate(equation.input1, equation.input2, equation.operatorSelected)
+            
             updateDisplay(equation.output);
             equation.input1 =  equation.output;
             equation.operatorSelected = nextOperator;
             equation.output = undefined;
+
+            equation.outputActive = false;
+            equation.input1Active = true;
+            equation.input2Active = false;
+            equation.operatorSelectedActive = false;
             
             input = '';
     }
@@ -98,20 +111,18 @@ function disableDecimal(){
     if(input == '') {
         decimalButton.disabled = false;
     }
-
-     if(String(input).includes('.')){
+    if(box.textContent.includes('.')){
         decimalButton.disabled = true;
     } 
+
     else { 
         decimalButton.disabled = false;
     }
-
-   
 }
 
 function getInput(){
     const key = this.getAttribute('data-key');
-    disableDecimal();
+   
 
     switch(key){
         
@@ -123,10 +134,11 @@ function getInput(){
             deleteValues(input);
             break;
     
-        case '=' :
-            
+        case '=':
             operate(equation.input1, equation.input2, equation.operatorSelected)
             updateDisplay(equation.output);
+            equation.input2Active = false;
+            equation.outputActive = true;
             break;
 
         case '*':
@@ -139,12 +151,16 @@ function getInput(){
             break;
         }
         //has many operators
-        if(equation.input1 && equation.input2 && equation.output == undefined) {
+        if(equation.input1 && equation.input2 && equation.output == undefined){
             hasManyOperators(key);
             break;
         }
 
             equation.operatorSelected = key;
+            equation.operatorSelectedActive = true;
+            equation.input1Active = false;
+            equation.input2Active = false;
+            equation.outputActive = false;
             updateDisplay(key);
             input = '';
 
@@ -158,12 +174,19 @@ function getInput(){
 
         default:   
             input += key;
-            
-            equation.operatorSelected == undefined ? equation.input1 = storeNumber(input):   equation.input2 = storeNumber(input);
-        
+            if(equation.input1Active) {
+                equation.input1 = storeNumber(input)
+            }    
+            else {
+                equation.input2 = storeNumber(input);
+                equation.input1Active = false;
+                equation.outputActive = false;
+                equation.operatorSelectedActive = false;
+                equation.input2Active = true;
+            }
             updateDisplay(input);
         }
-    
+    disableDecimal();
     console.table(equation )
 }
 
@@ -182,7 +205,7 @@ function operate(num1,num2,operator){
             break;
 
         case '/':
-            equation.output =divide(num1,num2);
+            equation.output = divide(num1,num2);
             break;
     }
 }
@@ -229,8 +252,8 @@ function getMultiplier(input1,input2){
     }    
    
     let multiplier = '1';
-    for(i=0; i < decimals; i++) {
-        multiplier+= '0';
+    for(i = 0; i < decimals; i++) {
+        multiplier += '0';
     }
     
     return [multiplier,decimals];
@@ -240,15 +263,15 @@ function getMultiplier(input1,input2){
 function add(num1,num2){
     if(equation.hasDecimal ){
         let multiplier = getMultiplier(num1, num2);
-        return ((num1 * multiplier[0]) + (num2 * multiplier[0]))/multiplier[0];
+        return ((num1 * multiplier[0]) + (num2 * multiplier[0])) / multiplier[0];
     }
     else return num1 + num2;
 }
 function subtract(num1,num2){
     if(equation.hasDecimal){
         let multiplier = getMultiplier(num1, num2);
-        return ((num1 * multiplier[0]) - (num2 * multiplier[0]))/multiplier[0];
-    }
+        return ((num1 * multiplier[0]) - (num2 * multiplier[0])) / multiplier[0];
+    } 
     return num1 - num2;
 }
 function divide(num1,num2){
@@ -268,7 +291,7 @@ function divide(num1,num2){
 function multiply(num1,num2){
     if(equation.hasDecimal){
         let multiplier = getMultiplier(num1, num2);
-        let product = ((num1 ) * (num2 * multiplier[0]))/(multiplier[0]);
+        let product = ((num1 ) * (num2 * multiplier[0])) / (multiplier[0]);
         return parseFloat(product.toFixed(multiplier[1]+1));
     }
     return num1 * num2;
