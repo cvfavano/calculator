@@ -198,8 +198,8 @@ function getDecimalLength (input1) {
 function getMultiplier(input1,input2){
     const numberstring1 = String(input1);
     const numberstring2 = String(input2);
-    const hasDecimal1 = getDecimalLength(input1);
-    const hasDecimal2 = getDecimalLength(input2);
+    let hasDecimal1 = getDecimalLength(input1);
+    let hasDecimal2 = getDecimalLength(input2);
 
     let decimals;
 
