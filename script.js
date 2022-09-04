@@ -8,6 +8,7 @@ let input ='';
 const box = document.querySelector('.display > p');
 let decimalButton = document.querySelector('button#decimal');
 
+ 
 function createEquation() {
     const mathEquation = {
         input1: undefined,
@@ -16,9 +17,6 @@ function createEquation() {
         operatorSelected: undefined,
         hasDecimal: false,
         isActive : 'input1'
-        // input2Active: false,
-        // operatorSelectedActive: false,
-        // outputActive: false
     };
 
     decimalButton.disabled = false;
@@ -28,11 +26,6 @@ function createEquation() {
 
 let equation = createEquation();
 
-console.log(equation)
-
-  
-
-
 function updateDisplay(string){
     box.firstChild.data = string;
 }
@@ -40,49 +33,79 @@ function clearCalculator(){
     updateDisplay('0');
     equation = createEquation();
     input = '';
-    return;
 }
 
 function divisbleByZeroError(){
     return equation.input2 == 0 ?  true : false;
 }
 
-function deleteValue(){  deleteValue:{
+function deleteOperator(){
+    updateDisplay(equation.input1);
+    equation.isActive = 'input1';
+    equation.operatorSelected = undefined;
+}
 
-   // if (equation[equation.isActive]) == output
-let 
-     current = equation.isActive ;
-console.log(current);
-    if (current == 'input1' && input == ''){
-        break deleteValue;
-    }
-    
-
-    let newNumber = current.toString();
+function deleteNumber(){
+    const current = equation.isActive;
+    let newNumber = equation[current].toString();
     input = newNumber.substring(0,newNumber.length-1);
-    
-    console.log('here ' +current);
-    console.log('here 2 '+newNumber);
-    
-    //store number, find how to find current number
-    updateDisplay(input);
 
+    updateDisplay(input);
     disableDecimal();
-    console.log(input.length )
+
     if (input.length > 0){
         equation[equation.isActive] = storeNumber(input);
-        updateDisplay(input);
     }
-    else {
-
-        //last case input1 is undefined 
-        equation[equation.isActive] = undefined;
-        input = '';
-        updateDisplay(0);
+    if (input.length == 0){
+        changeActiveStatus();
     }
-    console.log(input);
-    console.log(equation)
 }
+
+function changeActiveStatus(){
+    const current = equation.isActive;
+    switch(equation.isActive) {
+        case 'output':
+            equation[current] = undefined;
+            input = equation.input2;
+            updateDisplay(equation.input2);
+            equation.isActive = 'input2';
+        break;
+
+        case 'input2':
+            equation[current] = undefined;
+            input = equation.operatorSelected;
+            updateDisplay(equation.operatorSelected);
+            equation.isActive = 'operator';
+        break;
+
+        case 'input1':
+            equation[current] = undefined;
+            input = '';
+            updateDisplay(0);
+        break;
+    }
+}
+
+function deleteController(){  
+    deleteController:{
+        //input1 is back to undefined
+        if (equation.input1 == undefined){
+            updateDisplay(0);
+            break deleteController;
+        }
+
+        switch (equation.isActive) {
+            case 'output':
+            case 'input2':
+            case 'input1':    
+                deleteNumber();     
+            break;
+        
+            case 'operator':
+                deleteOperator();
+            break;
+        }
+    }
 }
 
 function storeNumber(value){
@@ -149,14 +172,14 @@ function getInput(){
             break;
         
        case 'delete':
-            deleteValue(input);
+        deleteController(input);
             break;
     
         case '=':
             operate(equation.input1, equation.input2, equation.operatorSelected)
             updateDisplay(equation.output);
           
-            equation.isActive = 'operator';
+            equation.isActive = 'output';
             break;
 
         case '*':
