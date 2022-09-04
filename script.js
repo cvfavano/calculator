@@ -127,7 +127,9 @@ function hasOutput(operator){
         equation.operatorSelected = operator;
         updateDisplay(equation.operatorSelected);
         equation.isActive = 'operator';
-        
+        equation.input1 = equation.output;
+        equation.input2 = undefined;
+        equation.output = undefined;
         input = '';
     }
 }
@@ -349,5 +351,5 @@ function multiply(num1,num2){
 // console.log(3.025/2.2)
 // console.log(3.5*2.21)
 // console.log(1.1 +1.3 + .2)
-// console.log((1.1 +1.3) + .2)
+// console.log((1.1 +1.3) + .2) ==> operate on total broken
 // console.log(32.09*100)
