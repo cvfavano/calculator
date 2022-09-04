@@ -1,5 +1,8 @@
 const buttons = document.querySelectorAll('button');
 buttons.forEach(button => button.addEventListener('click', getInput));
+
+//const deleteButton = document.querySelector('.delete');
+//deleteButton.addEventListener('click', deleteValue);
 let input ='';
 
 const box = document.querySelector('.display > p');
@@ -12,10 +15,10 @@ function createEquation() {
         output: undefined,
         operatorSelected: undefined,
         hasDecimal: false,
-        input1Active : true,
-        input2Active: false,
-        operatorSelectedActive: false,
-        outputActive: false
+        isActive : 'input1'
+        // input2Active: false,
+        // operatorSelectedActive: false,
+        // outputActive: false
     };
 
     decimalButton.disabled = false;
@@ -27,9 +30,8 @@ let equation = createEquation();
 
 console.log(equation)
 
-function getActiveInput(string){
+  
 
-}
 
 function updateDisplay(string){
     box.firstChild.data = string;
@@ -45,27 +47,54 @@ function divisbleByZeroError(){
     return equation.input2 == 0 ?  true : false;
 }
 
-function deleteValues(value){  
-    console.log('value: '   + value);
-    const str = value.toString();
-    const newNumber = str.substring(0,str.length-1);
+function deleteValue(){  deleteValue:{
 
-    getActiveInput();
+   // if (equation[equation.isActive]) == output
+let 
+     current = equation.isActive ;
+console.log(current);
+    if (current == 'input1' && input == ''){
+        break deleteValue;
+    }
+    
+
+    let newNumber = current.toString();
+    input = newNumber.substring(0,newNumber.length-1);
+    
+    console.log('here ' +current);
+    console.log('here 2 '+newNumber);
+    
     //store number, find how to find current number
-    updateDisplay(newNumber);
-    console.log(newNumber);
+    updateDisplay(input);
+
+    disableDecimal();
+    console.log(input.length )
+    if (input.length > 0){
+        equation[equation.isActive] = storeNumber(input);
+        updateDisplay(input);
+    }
+    else {
+
+        //last case input1 is undefined 
+        equation[equation.isActive] = undefined;
+        input = '';
+        updateDisplay(0);
+    }
+    console.log(input);
+    console.log(equation)
+}
 }
 
-function storeNumber(input){
-    if(typeof input != 'string') {
-        input = input.toString();
+function storeNumber(value){
+    if(typeof value != 'string') {
+        value = input.toString();
     }
-    if(input.includes('.')){
+    if(value.includes('.')){
         equation.hasDecimal = true;
-        return parseFloat(input);
+        return parseFloat(value);
     }
     else{
-        return parseInt(input);
+        return parseInt(value);
     }   
 }
 
@@ -74,14 +103,7 @@ function hasOutput(operator){
     if(equation.output != undefined) {
         equation.operatorSelected = operator;
         updateDisplay(equation.operatorSelected);
-        equation.input1 = equation.output;
-        equation.input2 = undefined;
-        equation.output = undefined;
-        
-        equation.outputActive = false;
-        equation.input1Active = true;
-        equation.input2Active = false;
-        equation.operatorSelectedActive = false;
+        equation.isActive = 'operator';
         
         input = '';
     }
@@ -90,19 +112,15 @@ function hasManyOperators(nextOperator){
     //has chained operations without total 9+9+9
     if (equation.operatorSelected != undefined) {
         
-            operate(equation.input1, equation.input2, equation.operatorSelected)
+        operate(equation.input1, equation.input2, equation.operatorSelected)
             
-            updateDisplay(equation.output);
-            equation.input1 =  equation.output;
-            equation.operatorSelected = nextOperator;
-            equation.output = undefined;
-
-            equation.outputActive = false;
-            equation.input1Active = true;
-            equation.input2Active = false;
-            equation.operatorSelectedActive = false;
+        updateDisplay(equation.output);
+        equation.input1 =  equation.output;
+        equation.operatorSelected = nextOperator;
+        equation.output = undefined;
+        equation.isActive = 'operator';
             
-            input = '';
+        input = '';
     }
 }
 
@@ -130,15 +148,15 @@ function getInput(){
             clearCalculator();
             break;
         
-        case 'delete':
-            deleteValues(input);
+       case 'delete':
+            deleteValue(input);
             break;
     
         case '=':
             operate(equation.input1, equation.input2, equation.operatorSelected)
             updateDisplay(equation.output);
-            equation.input2Active = false;
-            equation.outputActive = true;
+          
+            equation.isActive = 'operator';
             break;
 
         case '*':
@@ -155,13 +173,11 @@ function getInput(){
             hasManyOperators(key);
             break;
         }
-
+        else {
             equation.operatorSelected = key;
-            equation.operatorSelectedActive = true;
-            equation.input1Active = false;
-            equation.input2Active = false;
-            equation.outputActive = false;
+            equation.isActive = 'operator';
             updateDisplay(key);
+        }
             input = '';
 
             break;
@@ -169,25 +185,32 @@ function getInput(){
         case 'plus-minus':
             Math.sign(input) == 1 ? input = -Math.abs(input) : input = Math.abs(input);
             updateDisplay(input);
-            equation.operatorSelected == undefined ? equation.input1 = storeNumber(input):   equation.input2 = storeNumber(input);
-            break;
 
+            switch(equation.isActive) {
+                case 'input1':
+                    equation.input1 = storeNumber(input);
+                    break;
+                case 'input2':
+                    equation.input2 = storeNumber(input);
+                    break;
+                case 'output':
+                    equation.output = storeNumber(input);
+                    break;
+            }
+            break;
         default:   
             input += key;
-            if(equation.input1Active) {
-                equation.input1 = storeNumber(input)
+            if(equation.isActive == 'input1')  {
+                equation.input1 = storeNumber(input);
             }    
             else {
                 equation.input2 = storeNumber(input);
-                equation.input1Active = false;
-                equation.outputActive = false;
-                equation.operatorSelectedActive = false;
-                equation.input2Active = true;
+                equation.isActive = 'input2';
             }
             updateDisplay(input);
         }
     disableDecimal();
-    console.table(equation )
+    console.table(equation);
 }
 
 function operate(num1,num2,operator){
