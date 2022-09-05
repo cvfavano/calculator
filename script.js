@@ -56,6 +56,17 @@ function deleteNumber(){
     if (input.length > 0){
         equation[equation.isActive] = storeNumber(input);
     }
+    //altered output after delete 
+    if(current == 'output' ) {
+        equation.input1 = equation.output 
+            equation.output = undefined;
+            equation.input2 = undefined;
+            equation.operatorSelected = undefined;
+
+            input = equation.input1;
+            updateDisplay(equation.input1);
+            equation.isActive = 'input1';
+    }
     if (input.length == 0){
         changeActiveStatus();
     }
@@ -64,12 +75,6 @@ function deleteNumber(){
 function changeActiveStatus(){
     const current = equation.isActive;
     switch(equation.isActive) {
-        case 'output':
-            equation[current] = undefined;
-            input = equation.input2;
-            updateDisplay(equation.input2);
-            equation.isActive = 'input2';
-        break;
 
         case 'input2':
             equation[current] = undefined;
@@ -148,7 +153,15 @@ function hasManyOperators(nextOperator){
         input = '';
     }
 }
-
+function updateDisplayEquation(){
+    const displayEq = document.querySelector('.equation');
+    if(equation.input1 && equation.operatorSelected){
+        displayEq.textContent = equation.input1 + ' ' + equation.operatorSelected;
+    }
+    if(equation.input1) {
+        displayEq.textContent = equation.input1;
+    }
+}
 function disableDecimal(){
 
     if(input == '') {
@@ -164,6 +177,7 @@ function disableDecimal(){
 }
 
 function getInput(){
+    getInput:{
     const key = this.getAttribute('data-key');
    
 
@@ -178,6 +192,12 @@ function getInput(){
             break;
     
         case '=':
+            if(equation.input2 == undefined ){
+                break getInput;
+            }
+            if(equation.operatorSelected == undefined){
+                break getInput;
+            }
             operate(equation.input1, equation.input2, equation.operatorSelected)
             updateDisplay(equation.output);
           
@@ -236,8 +256,9 @@ function getInput(){
         }
     disableDecimal();
     console.table(equation);
+   // updateDisplayEquation();
 }
-
+    }
 function operate(num1,num2,operator){
     switch(operator){
         case '+':
