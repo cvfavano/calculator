@@ -50,10 +50,11 @@ function deleteNumber(){
     let newNumber = equation[current].toString();
     input = newNumber.substring(0,newNumber.length-1);
 
-    updateDisplay(input);
-    disableDecimal();
+   
 
     if (input.length > 0){
+        updateDisplay(input);
+        disableDecimal();
         equation[equation.isActive] = storeNumber(input);
     }
     //altered output after delete 
@@ -98,7 +99,6 @@ function deleteController(){
             updateDisplay(0);
             break deleteController;
         }
-
         switch (equation.isActive) {
             case 'output':
             case 'input2':
@@ -181,6 +181,7 @@ function getInput(){
     const key = this.getAttribute('data-key');
    
 
+    console.log(input)
     switch(key){
         
         case 'clear':
@@ -188,7 +189,7 @@ function getInput(){
             break;
         
        case 'delete':
-        deleteController(input);
+            deleteController(input);
             break;
     
         case '=':
@@ -202,6 +203,7 @@ function getInput(){
             updateDisplay(equation.output);
           
             equation.isActive = 'output';
+            input = equation.output;
             break;
 
         case '*':
@@ -209,6 +211,9 @@ function getInput(){
         case '-':
         case '+':    
             
+        if(equation.input1 == undefined) {
+            equation.input1 = 0;
+        }
         if(equation.input1 && equation.input2 && equation.output){
             hasOutput(key);
             break;
@@ -240,6 +245,7 @@ function getInput(){
                     break;
                 case 'output':
                     equation.output = storeNumber(input);
+
                     break;
             }
             break;
