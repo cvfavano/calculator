@@ -1,8 +1,25 @@
-const buttons = document.querySelectorAll('button');
-buttons.forEach(button => button.addEventListener('click', getInput));
+//const buttons = document.querySelectorAll('button');
+//buttons.forEach(button => button.addEventListener('click', getInput));
 
-//const deleteButton = document.querySelector('.delete');
-//deleteButton.addEventListener('click', deleteValue);
+const deleteButton = document.querySelector('.delete');
+deleteButton.addEventListener('click', deleteController);
+
+const clearButton = document.querySelector('.clear');
+clearButton.addEventListener('click', clearCalculator);
+
+const plusMinusButton = document.querySelector('.plus-minus');
+plusMinusButton.addEventListener('click', plusMinusChange);
+
+const numberButton = document.querySelectorAll('.number');
+console.log(numberButton)
+numberButton.forEach(x => x.addEventListener('click',  processNumberInput));
+
+const equalsButton = document.querySelector('.equals');
+equalsButton.addEventListener('click', processEquation);
+
+const operationButton = document.querySelectorAll('.operation');
+operationButton.forEach(button=> button.addEventListener('click', processOperation));
+
 let input ='';
 
 const box = document.querySelector('.display > p');
@@ -38,6 +55,8 @@ function clearCalculator(){
 function divisbleByZeroError(){
     return equation.input2 == 0 ?  true : false;
 }
+
+
 
 function deleteOperator(){
     updateDisplay(equation.input1);
@@ -92,7 +111,7 @@ function changeActiveStatus(){
     }
 }
 
-function deleteController(){  
+function deleteController(input){  
     deleteController:{
         //input1 is back to undefined
         if (equation.input1 == undefined){
@@ -110,6 +129,7 @@ function deleteController(){
                 deleteOperator();
             break;
         }
+        disableDecimal();
     }
 }
 
@@ -117,15 +137,18 @@ function storeNumber(value){
     if(typeof value != 'string') {
         value = input.toString();
     }
+    return value;
+}
+
+function toNumber(value){
     if(value.includes('.')){
         equation.hasDecimal = true;
         return parseFloat(value);
     }
     else{
         return parseInt(value);
-    }   
+    }     
 }
-
 //has total and uses total in next operation
 function hasOutput(operator){
     if(equation.output != undefined) {
@@ -153,15 +176,7 @@ function hasManyOperators(nextOperator){
         input = '';
     }
 }
-function updateDisplayEquation(){
-    const displayEq = document.querySelector('.equation');
-    if(equation.input1 && equation.operatorSelected){
-        displayEq.textContent = equation.input1 + ' ' + equation.operatorSelected;
-    }
-    if(equation.input1) {
-        displayEq.textContent = equation.input1;
-    }
-}
+
 function disableDecimal(){
 
     if(input == '') {
@@ -175,112 +190,107 @@ function disableDecimal(){
         decimalButton.disabled = false;
     }
 }
+function plusMinusChange(){
+    Math.sign(input) == 1 ? input = -Math.abs(input) : input = Math.abs(input);
+    updateDisplay(input);
 
-function getInput(){
-    getInput:{
-    const key = this.getAttribute('data-key');
-   
+    switch(equation.isActive) {
+        case 'input1':
+            equation.input1 = storeNumber(input);
+            break;
+        case 'input2':
+            equation.input2 = storeNumber(input);
+            break;
+        case 'output':
+            equation.output = storeNumber(input);
+            break;
+    }
+}
 
-    console.log(input)
-    switch(key){
-        
-        case 'clear':
-            clearCalculator();
-            break;
-        
-       case 'delete':
-            deleteController(input);
-            break;
-    
-        case '=':
-            if(equation.input2 == undefined ){
-                break getInput;
-            }
-            if(equation.operatorSelected == undefined){
-                break getInput;
-            }
-            operate(equation.input1, equation.input2, equation.operatorSelected)
-            updateDisplay(equation.output);
-          
-            equation.isActive = 'output';
-            input = equation.output;
-            break;
+function processEquation (){
+  
+    processEquation : {
+    if(equation.input2 == undefined ){
+        break processEquation;
+    }
+    if(equation.operatorSelected == undefined){
+        break processEquation;
+    }
+    operate(equation.input1, equation.input2, equation.operatorSelected)
+    updateDisplay(equation.output);
+  
+    equation.isActive = 'output';
+    input = equation.output;
+    }
+    console.log(equation)
+}
 
-        case '*':
-        case '/':
-        case '-':
-        case '+':    
-            
+function processOperation(){
+       processOperation:{
+        const key = this.getAttribute('data-key');
         if(equation.input1 == undefined) {
             equation.input1 = 0;
         }
         if(equation.input1 && equation.input2 && equation.output){
             hasOutput(key);
-            break;
-        }
-        //has many operators
+            break processOperation;
+        }   
+            //has many operators
         if(equation.input1 && equation.input2 && equation.output == undefined){
             hasManyOperators(key);
-            break;
+            break processOperation;
         }
         else {
             equation.operatorSelected = key;
             equation.isActive = 'operator';
             updateDisplay(key);
-        }
+        
             input = '';
-
-            break;
-
-        case 'plus-minus':
-            Math.sign(input) == 1 ? input = -Math.abs(input) : input = Math.abs(input);
-            updateDisplay(input);
-
-            switch(equation.isActive) {
-                case 'input1':
-                    equation.input1 = storeNumber(input);
-                    break;
-                case 'input2':
-                    equation.input2 = storeNumber(input);
-                    break;
-                case 'output':
-                    equation.output = storeNumber(input);
-
-                    break;
-            }
-            break;
-        default:   
-            input += key;
-            if(equation.isActive == 'input1')  {
-                equation.input1 = storeNumber(input);
-            }    
-            else {
-                equation.input2 = storeNumber(input);
-                equation.isActive = 'input2';
-            }
-            updateDisplay(input);
         }
-    disableDecimal();
-    console.table(equation);
-   // updateDisplayEquation();
-}
+        
     }
+}
+
+
+function processNumberInput() {
+   
+    const key = this.getAttribute('data-key');
+
+   // console.log(key)
+    input += key;
+    if(equation.isActive == 'input1')  {
+        equation.input1 = storeNumber(input);
+    }    
+    else {
+        equation.input2 = storeNumber(input);
+        equation.isActive = 'input2';
+    }
+    updateDisplay(input);
+
+    disableDecimal();
+}
+
 function operate(num1,num2,operator){
     switch(operator){
         case '+':
-            equation.output = add(num1,num2);
+            add(num1,num2);
+            const sum = add(num1,num2);
+            equation.output = String(sum);
             break;
 
         case "-":
-            equation.output = subtract(num1,num2);
+            const difference = subtract(num1,num2);
+            equation.output = String(difference);
             break;
 
         case '*':
-            equation.output = multiply(num1,num2);
+            const product = multiply(num1,num2);
+            equation.output = String(product);
             break;
 
         case '/':
-            equation.output = divide(num1,num2);
+            const quotient = divide(num1,num2);
+            equation.output = String(quotient);
             break;
     }
 }
@@ -295,8 +305,7 @@ function getDecimalLength(input) {
 }
 
 function getMultiplier(input1,input2){
-    const numberstring1 = String(input1);
-    const numberstring2 = String(input2);
+   
     let hasDecimal1 = getDecimalLength(input1);
     let hasDecimal2 = getDecimalLength(input2);
 
@@ -335,21 +344,31 @@ function getMultiplier(input1,input2){
 }
 
 
-function add(num1,num2){
+function add(x,y){
+
+    let num1 = toNumber(x);
+    let num2 = toNumber(y); 
+
     if(equation.hasDecimal ){
         let multiplier = getMultiplier(num1, num2);
         return ((num1 * multiplier[0]) + (num2 * multiplier[0])) / multiplier[0];
     }
     else return num1 + num2;
 }
-function subtract(num1,num2){
+function subtract(x,y){
+
+    let num1 = toNumber(x);
+    let num2 = toNumber(y); 
     if(equation.hasDecimal){
         let multiplier = getMultiplier(num1, num2);
         return ((num1 * multiplier[0]) - (num2 * multiplier[0])) / multiplier[0];
     } 
     return num1 - num2;
 }
-function divide(num1,num2){
+function divide(x,y){
+
+    let num1 = toNumber(x);
+    let num2 = toNumber(y); 
     const isError = divisbleByZeroError();
     if(isError){
         equation.output = 'undefined';
@@ -363,7 +382,10 @@ function divide(num1,num2){
     }
     return num1 / num2;
 }
-function multiply(num1,num2){
+function multiply(x,y){
+
+    let num1 = toNumber(x);
+    let num2 = toNumber(y); 
     if(equation.hasDecimal){
         let multiplier = getMultiplier(num1, num2);
         let product = ((num1 ) * (num2 * multiplier[0])) / (multiplier[0]);
