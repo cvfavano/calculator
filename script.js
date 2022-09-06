@@ -11,7 +11,6 @@ const plusMinusButton = document.querySelector('.plus-minus');
 plusMinusButton.addEventListener('click', plusMinusChange);
 
 const numberButton = document.querySelectorAll('.number');
-console.log(numberButton)
 numberButton.forEach(x => x.addEventListener('click',  processNumberInput));
 
 const equalsButton = document.querySelector('.equals');
@@ -56,8 +55,6 @@ function divisbleByZeroError(){
     return equation.input2 == 0 ?  true : false;
 }
 
-
-
 function deleteOperator(){
     updateDisplay(equation.input1);
     equation.isActive = 'input1';
@@ -68,8 +65,6 @@ function deleteNumber(){
     const current = equation.isActive;
     let newNumber = equation[current].toString();
     input = newNumber.substring(0,newNumber.length-1);
-
-   
 
     if (input.length > 0){
         updateDisplay(input);
@@ -133,11 +128,32 @@ function deleteController(input){
     }
 }
 
+function checkForLeadingZero(num){
+    if (num.length > 1 && num[0] == 0) {
+        input = num.substring(1);
+        return input;
+    }
+    else {
+        return num;
+    }
+}
+
+function checkforLeadingDecimal(value){
+    if (value[0] == '.'){
+       return value = 0 + value;
+    }
+    else return value;
+}
+
 function storeNumber(value){
     if(typeof value != 'string') {
         value = input.toString();
     }
-    return value;
+
+    check0 = checkForLeadingZero(value);
+    checkDecimal = checkforLeadingDecimal(check0);
+    input = checkDecimal
+    return input;
 }
 
 function toNumber(value){
@@ -253,10 +269,9 @@ function processOperation(){
 
 
 function processNumberInput() {
-   
-    const key = this.getAttribute('data-key');
 
-   // console.log(key)
+    const key = this.getAttribute('data-key');
+  
     input += key;
     if(equation.isActive == 'input1')  {
         equation.input1 = storeNumber(input);
@@ -266,7 +281,6 @@ function processNumberInput() {
         equation.isActive = 'input2';
     }
     updateDisplay(input);
-
     disableDecimal();
 }
 
