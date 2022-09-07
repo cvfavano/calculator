@@ -74,13 +74,13 @@ function deleteNumber(){
     //altered output after delete 
     if(current == 'output' ) {
         equation.input1 = equation.output 
-            equation.output = undefined;
-            equation.input2 = undefined;
-            equation.operatorSelected = undefined;
+        equation.output = undefined;
+        equation.input2 = undefined;
+        equation.operatorSelected = undefined;
 
-            input = equation.input1;
-            updateDisplay(equation.input1);
-            equation.isActive = 'input1';
+        input = equation.input1;
+        updateDisplay(equation.input1);
+        equation.isActive = 'input1';
     }
     if (input.length == 0){
         changeActiveStatus();
@@ -201,7 +201,6 @@ function disableDecimal(){
     if(box.textContent.includes('.')){
         decimalButton.disabled = true;
     } 
-
     else { 
         decimalButton.disabled = false;
     }
@@ -238,7 +237,6 @@ function processEquation (){
     equation.isActive = 'output';
     input = equation.output;
     }
-    console.log(equation)
 }
 
 function processOperation(){
@@ -263,7 +261,6 @@ function processOperation(){
         
             input = '';
         }
-        
     }
 }
 
@@ -346,7 +343,6 @@ function getMultiplier(input1,input2){
         else {
             decimals = hasDecimal2;
         }
-
     }    
    
     let multiplier = '1';
