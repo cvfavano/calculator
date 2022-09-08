@@ -66,30 +66,30 @@ function deleteNumber(){
     let newNumber = equation[current].toString();
     input = newNumber.substring(0,newNumber.length-1);
 
-    if (input.length > 0){
-        updateDisplay(input);
-        disableDecimal();
-        equation[equation.isActive] = storeNumber(input);
-    }
-    //altered output after delete 
-    if(current == 'output' ) {
-        equation.input1 = equation.output 
-        equation.output = undefined;
-        equation.input2 = undefined;
-        equation.operatorSelected = undefined;
-
-        input = equation.input1;
-        updateDisplay(equation.input1);
-        equation.isActive = 'input1';
-    }
-    if (input.length == 0){
-        changeActiveStatus();
-    }
+    updateDisplay(input);
+    disableDecimal();
+    equation[equation.isActive] = storeNumber(input);
+    
+    //altered output after delete becomes input1
+    if(current == 'output'|| input.length == 0 ) {
+        changeActiveStatus();   
+    }    
 }
 
 function changeActiveStatus(){
     const current = equation.isActive;
     switch(equation.isActive) {
+
+        case 'output': 
+            equation.input1 = equation.output 
+            equation.output = undefined;
+            equation.input2 = undefined;
+            equation.operatorSelected = undefined;
+
+            input = equation.input1;
+            updateDisplay(equation.input1);
+            equation.isActive = 'input1';
+        break;
 
         case 'input2':
             equation[current] = undefined;
