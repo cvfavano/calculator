@@ -150,8 +150,8 @@ function storeNumber(value){
         value = input.toString();
     }
 
-    check0 = checkForLeadingZero(value);
-    checkDecimal = checkforLeadingDecimal(check0);
+    let check0 = checkForLeadingZero(value);
+    let checkDecimal = checkforLeadingDecimal(check0);
     input = checkDecimal
     return input;
 }
